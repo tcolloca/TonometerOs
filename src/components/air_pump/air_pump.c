@@ -16,10 +16,12 @@ void AirPump_Init(char port, uint8_t pin_number) {
 }
 
 void AirPump_TurnOn() {
+	Usb_Write('n');
 	Gpio_SetPin(port_, pin_number_);
 }
 
 void AirPump_TurnOff() {
+	Usb_Write('f');
 	Gpio_ClearPin(port_, pin_number_);
 }
 
