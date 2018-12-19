@@ -28,7 +28,7 @@ void Timer0_Init() {
 
 	TCNT0 = 0;  // Reset counter.
 
-	uint8_t prescaler = Timer0_SetPrescaler();
+	Timer0_SetPrescaler();
 
 	OCR0 = CLOCK_HZ / PRESCALER / RESOLUTION_FREQ - 1;  // Compare to this value.
 
@@ -42,7 +42,7 @@ void Timer0_Init() {
 	SET(TIMSK, OCIE0);  // Enable Timer/Counter0 Compare match interrupt.
 
 	Logger_AtDebug("Initialized Timer0 at CTC mode.");
-	Logger_AtDebug("Initialized Timer0 Prescaler: %d", prescaler);
+	Logger_AtDebug("Initialized Timer0 Prescaler: %d", PRESCALER);
 	Logger_AtDebug("Initialized Timer0 OCR0: %d", OCR0);
 }
 
@@ -54,9 +54,9 @@ SIGNAL(TIMER0_COMP_vect) {
 		ticks_msecs_++;
 	}
 	// TODO: Remove
-	if (ticks_msecs_ % 2000 == 0) {
+	if (ticks_usecs_ % 2000000 == 0) {
 		Led_TurnOff();
-	} else if (ticks_msecs_ % 1000 == 0) {
+	} else if (ticks_usecs_ % 1000000 == 0) {
 		Led_TurnOn();
 	}
 	// TODO: Make measurement from within here or use input capture.

@@ -19,11 +19,11 @@ void Valve_Init(char port, uint8_t pin_number) {
 
 void Valve_Open() {
 	Gpio_SetPin(port_, pin_number_);
-	Logger_AtInfo("Opened Valve.");
+	Logger_AtDebug("Opened Valve.");
 }
 
 void Valve_Close() {
 	Gpio_ClearPin(port_, pin_number_);
-	Logger_AtInfo("Closed Valve.");
+	Logger_AtDebug("Closed Valve.");
 }
 

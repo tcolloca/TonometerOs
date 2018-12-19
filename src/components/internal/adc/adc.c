@@ -26,13 +26,13 @@ void Adc_Init() {
 	Logger_AtDebug("Initialized ADC.");
 }
 
-uint8_t Adc_GetSample() {
+uint16_t Adc_GetSample() {
 	SET(ADCSRA, ADSC);  // Start conversion.
 
 	while (IS_SET(ADCSRA, ADSC))
 		;  // Wait until conversion is over.
 
-	Logger_AtDebug("Got ADC Sample: %d", ADC);
+	Logger_AtFinest("Got ADC Sample: %d", ADC);
 
 	return ADC;
 }

@@ -26,7 +26,7 @@ void Timer1_Init() {
 
 	TCNT1 = 0;  // Reset counter.
 
-	uint8_t prescaler = Timer1_SetPrescaler();
+	Timer1_SetPrescaler();
 
 	OCR1A = CLOCK_HZ / PRESCALER / RESOLUTION_FREQ - 1;  // Compare to this value.
 
@@ -36,7 +36,7 @@ void Timer1_Init() {
 	SET(TIMSK, OCIE1A);  // Enable Timer/Counter0 Compare match interrupt.
 
 	Logger_AtDebug("Initialized Timer1 at CTC mode (Match A).");
-	Logger_AtDebug("Initialized Timer1 Prescaler: %d", prescaler);
+	Logger_AtDebug("Initialized Timer1 Prescaler: %d", PRESCALER);
 	Logger_AtDebug("Initialized Timer1 OCR1A: %d", OCR1A);
 }
 

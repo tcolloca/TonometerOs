@@ -9,6 +9,6 @@
 void Adc_Init();
 
 /* Get ADC sample. */
-uint8_t Adc_GetSample();
+uint16_t Adc_GetSample();
 
 #endif  // COMPONENTS_INTERNAL_ADC_ADC_H_

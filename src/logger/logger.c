@@ -14,6 +14,30 @@ void Logger_SetLevel(Level level) {
 	level_ = level;
 }
 
+void Logger_AtFinest(char* fmt, ...) {
+	if (level_ > FINEST) {
+		return;
+	}
+	printf("FINEST: ");
+	PRINT
+}
+
+void Logger_AtFiner(char* fmt, ...) {
+	if (level_ > FINER) {
+		return;
+	}
+	printf("FINER: ");
+	PRINT
+}
+
+void Logger_AtFine(char* fmt, ...) {
+	if (level_ > FINE) {
+		return;
+	}
+	printf("FINE: ");
+	PRINT
+}
+
 void Logger_AtDebug(char* fmt, ...) {
 	if (level_ > DEBUG) {
 		return;

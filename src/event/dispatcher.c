@@ -67,7 +67,6 @@ void Dispatcher_Dispatch(EventId event_id, Event* event) {
 
 void Dispatcher_AddListener(EventId event_id, Listener* listener) {
 	Dispatcher* dispatcher = Dispatcher_GetInstance(event_id);
-	printf("dispatcher listener size: %d", dispatcher->listeners_size_);
 	if (dispatcher->listeners_size_ < LISTENERS_MAX_SIZE) {
 		dispatcher->listeners_[dispatcher->listeners_size_++] = listener;
 		return;

@@ -4,6 +4,7 @@
 
 #include "components/internal/usb/usb.h"
 #include "components/internal/usb/event.h"
+#include "logger/logger.h"
 
 #define READ_BUFFER_SIZE 10
 
@@ -24,6 +25,9 @@ void Io_Init() {
 	stdout = &usb_stdout;
 	Listener* usb_read_listener = Listener_New(NULL, &Io_UsbReadListener);
 	UsbRead_AddListener(NULL, usb_read_listener);
+
+	printf("\n\n\n"); // Add distance from garbage.
+	Logger_AtDebug("Initialized I/O via Uart (Usb).");
 }
 
 void Io_UsbReadListener(void* a_void, Event* event) {

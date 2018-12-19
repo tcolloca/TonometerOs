@@ -38,7 +38,6 @@ unsigned char Usb_Read() {
 	// Wait for data to be available.
 	while (IS_CLEAR(UCSR0A, RXC0))
 		;
-	Logger_AtDebug("Read from COM: %c", UDR0);
 	return UDR0;
 }
 
@@ -46,7 +45,6 @@ void Usb_Write(unsigned char data) {
 	// Wait for register to be clean.
 	while (IS_CLEAR(UCSR0A, UDRE0))
 		;
-	Logger_AtDebug("Write to COM: %c", UDR0);
 	UDR0 = data;
 }
 

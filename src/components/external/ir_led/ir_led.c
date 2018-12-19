@@ -19,11 +19,11 @@ void IrLed_Init(char port, uint8_t pin_number) {
 
 void IrLed_TurnOn() {
 	Gpio_SetPin(port_, pin_number_);
-	Logger_AtInfo("IR Led turned on.");
+	Logger_AtDebug("IR Led turned on.");
 }
 
 void IrLed_TurnOff() {
 	Gpio_ClearPin(port_, pin_number_);
-	Logger_AtInfo("IR Led turned off.");
+	Logger_AtDebug("IR Led turned off.");
 }
 

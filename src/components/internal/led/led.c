@@ -16,10 +16,10 @@ void Led_Init() {
 void Led_TurnOff() {
 	// Internal Led power is opposite to pin value.
 	Gpio_SetPin('B', LED_PIN);
-	Logger_AtDebug("Internal Led off.");
+	Logger_AtFinest("Internal Led off.");
 }
 
 void Led_TurnOn() {
 	Gpio_ClearPin('B', LED_PIN);
-	Logger_AtDebug("Internal Led on.");
+	Logger_AtFinest("Internal Led on.");
 }

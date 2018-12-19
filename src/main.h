@@ -10,7 +10,7 @@
 void Main_ProcessTicksSec(int secs);
 
 /* Function to echo value read from usb plus one. */
-void Main_EchoPlusOne(unsigned char data);
+void Main_HandleInput(unsigned char data);
 
 bool PrintError();
 

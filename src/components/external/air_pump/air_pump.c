@@ -19,11 +19,11 @@ void AirPump_Init(char port, uint8_t pin_number) {
 
 void AirPump_TurnOn() {
 	Gpio_SetPin(port_, pin_number_);
-	Logger_AtInfo("Air Pump turned on.");
+	Logger_AtDebug("Air Pump turned on.");
 }
 
 void AirPump_TurnOff() {
 	Gpio_ClearPin(port_, pin_number_);
-	Logger_AtInfo("Air Pump turned off.");
+	Logger_AtDebug("Air Pump turned off.");
 }
 

@@ -17,16 +17,12 @@
 #include "components/internal/timer0/timer0.h"
 #include "components/internal/usb/usb.h"
 #include "components/internal/usb/event.h"
+#include "config/config.h"
 #include "event/event.h"
 #include "lib/io.h"
 #include "logger/logger.h"
 
-#define LOGGER_LEVEL   DEBUG
-
-#define AIR_PUMP_PORT 'b'
-#define AIR_PUMP_PIN   1
-
-void Main_EchoPlusOne(unsigned char data) {
+void Main_HandleInput(unsigned char data) {
 	if (data == '1') {
 		AirPump_TurnOn();
 	} else if (data == '2') {
@@ -49,25 +45,24 @@ void Main_TimerListener(void* a_void, Event* event) {
 	if (TimerEvent_GetTicks(timer_event) % 1000 == 0) {
 		Main_ProcessTicksSec(TimerEvent_GetTicks(timer_event) / 1000);
 		uint8_t data = Adc_GetSample();
-		//Usb_Write(data);
-		printf("read data: %d\n", data);
+		Logger_AtInfo("Data read: %d\n", data);
 	}
 }
 
 void Main_UsbReadListener(void* a_void, Event* event) {
 	UsbReadEvent* usb_read_event = (UsbReadEvent*) event;
-	Main_EchoPlusOne(UsbReadEvent_GetData(usb_read_event));
+	Main_HandleInput(UsbReadEvent_GetData(usb_read_event));
 }
 
 int main() {
 	Logger_SetLevel(LOGGER_LEVEL);
 
 	Usb_Init(); // First one to init to be able to debug.
+	Io_Init();
 
 	Led_Init();
 	Timer0_Init();
 //	IrLed_Init();
-	Io_Init();
 	Adc_Init();
 	AirPump_Init(AIR_PUMP_PORT, AIR_PUMP_PIN);
 
