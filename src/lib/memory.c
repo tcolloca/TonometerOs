@@ -109,7 +109,6 @@ void Mem_AddPtr(char* ptr, size_t size) {
 }
 
 void Mem_Print() {
-	// TODO: Implement printf?
 	printf("Memory:");
 	for (int i = 0; i < M_HEAP_SIZE; i++) {
 		if (i % 100 == 0) {

@@ -4,8 +4,8 @@
 #ifndef LOGGER_LOGGER_H_
 #define LOGGER_LOGGER_H_
 
-typedef enum Level {FINEST = 0, FINER = 1, FINE = 2, DEBUG = 3,
-										INFO = 4, WARNING = 5, ERROR = 6} Level;
+typedef enum Level {FINEST = 1, FINER = 2, FINE = 3, DEBUG = 4,
+										INFO = 5, WARNING = 6, ERROR = 7, LEVEL_UNSET = 0} Level;
 
 /* Sets the level of the logger. */
 void Logger_SetLevel(Level level);

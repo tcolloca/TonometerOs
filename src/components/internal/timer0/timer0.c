@@ -6,20 +6,16 @@
 #include <stdio.h>
 
 #include "components/internal/led/led.h" // TODO: Remove
-#include "components/internal/timer0/event.h"
 #include "logger/logger.h"
 #include "util/util.h"
 
 #define CLOCK_HZ         14745600
-#define PRESCALER        32
-// 5000 Hz seems to be the maximum freq.
-#define RESOLUTION_FREQ  5000  // 5000 Hz = 1 / 5000 s = 0.0002 s = 0.2 ms
+#define PRESCALER        8
+#define RESOLUTION_FREQ  50000  // 50000 Hz = 1 / 50000 s = 0.00002 s = 0.02 ms
 
 static const int DELTA_USECS_ = 1000000 / RESOLUTION_FREQ;
-static const int DELTA_MSECS_ = 1000 / RESOLUTION_FREQ;
 
 static volatile uint64_t ticks_usecs_ = 0;
-static volatile uint64_t ticks_msecs_ = 0;
 
 static uint8_t Timer0_SetPrescaler();
 
@@ -49,22 +45,6 @@ void Timer0_Init() {
 /* Timer/Counter0 Interrupt */
 SIGNAL(TIMER0_COMP_vect) {
 	ticks_usecs_ += DELTA_USECS_;
-	ticks_msecs_ += DELTA_MSECS_;
-	if (DELTA_MSECS_ == 0 && ticks_usecs_ % 1000 == 0) {
-		ticks_msecs_++;
-	}
-	// TODO: Remove
-	if (ticks_usecs_ % 2000000 == 0) {
-		Led_TurnOff();
-	} else if (ticks_usecs_ % 1000000 == 0) {
-		Led_TurnOn();
-	}
-	// TODO: Make measurement from within here or use input capture.
-
-//	Timer0_HandleTick();
-//	TimerEvent* event = TimerEvent_New(ticks_msecs_);
-//	Dispatcher_Dispatch(TIMER_EVENT_ID, event);
-//	TimerEvent_Destroy(event);
 }
 
 uint8_t Timer0_SetPrescaler() {
@@ -99,5 +79,5 @@ uint8_t Timer0_SetPrescaler() {
 }
 
 uint64_t Timer0_GetStartTimeInMillis() {
-	return ticks_msecs_;
+	return ticks_usecs_ / 1000;
 }

@@ -6,13 +6,8 @@
 
 #include <stdbool.h>
 
-/* Function to process every second. */
-void Main_ProcessTicksSec(int secs);
-
 /* Function to echo value read from usb plus one. */
-void Main_HandleInput(unsigned char data);
-
-bool PrintError();
+static void Main_HandleInput(unsigned char data);
 
 int main();
 

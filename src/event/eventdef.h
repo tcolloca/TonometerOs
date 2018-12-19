@@ -4,11 +4,8 @@
 #ifndef EVENT_EVENTDEF_H_
 #define EVENT_EVENTDEF_H_
 
-#define TIMER_EVENT_ID     1
-#define USB_READ_EVENT_ID  2
-#define ADC_READ_EVENT_ID  3
-
-typedef int EventId;
+typedef enum EventId {USB_READ_EVENT_ID = 1, ADC_READ_EVENT_ID = 2,
+											UNSET_EVENT_ID = 0} EventId;
 
 typedef void Event;
 
