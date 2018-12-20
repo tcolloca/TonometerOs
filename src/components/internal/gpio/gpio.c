@@ -25,7 +25,19 @@
 		case 'D': \
 			SET_MASK(CAT(reg, D), mask); \
 			break; \
-		} \
+	  case 'e': \
+		case 'E': \
+			SET_MASK(CAT(reg, E), mask); \
+			break; \
+		case 'f': \
+		case 'F': \
+			SET_MASK(CAT(reg, F), mask); \
+			break; \
+		case 'g': \
+		case 'G': \
+			SET_MASK(CAT(reg, G), mask); \
+			break; \
+		}
 
 #define REG_SWITCH_CLEAR(reg, port, mask)  \
 		switch (port) { \
@@ -45,7 +57,19 @@
 		case 'D': \
 			CLEAR_MASK(CAT(reg, D), mask); \
 			break; \
-		} \
+		case 'e': \
+		case 'E': \
+			CLEAR_MASK(CAT(reg, E), mask); \
+			break; \
+		case 'f': \
+		case 'F': \
+			CLEAR_MASK(CAT(reg, F), mask); \
+			break; \
+		case 'g': \
+		case 'G': \
+			CLEAR_MASK(CAT(reg, G), mask); \
+			break; \
+		}
 
 #define REG_SWITCH_N_GET(reg, port, mask)  \
 		switch (port) { \
@@ -61,7 +85,16 @@
 		case 'd': \
 		case 'D': \
 			return ~CAT(reg, D) & mask; \
-		} \
+		case 'e': \
+		case 'E': \
+			return ~CAT(reg, E) & mask; \
+		case 'f': \
+		case 'F': \
+			return ~CAT(reg, F) & mask; \
+		case 'g': \
+		case 'G': \
+			return ~CAT(reg, G) & mask; \
+		}
 
 
 void Gpio_InitPin(char port, uint8_t pin_number, bool output) {
@@ -73,12 +106,13 @@ void Gpio_InitAll(char port, bool output) {
 }
 
 void Gpio_InitWithMask(char port, uint8_t mask,
-		bool output) {
+bool output) {
 	if (output) {
 		REG_SWITCH_SET(DDR, port, mask);
 	} else {
 		REG_SWITCH_CLEAR(DDR, port, mask);
-		REG_SWITCH_SET(PORT, port, mask);
+		// Triac-based is default by commenting this.
+//		REG_SWITCH_SET(PORT, port, mask);
 	}
 }
 

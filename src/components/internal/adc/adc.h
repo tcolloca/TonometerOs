@@ -8,7 +8,7 @@
 /* Initialize the driver. */
 void Adc_Init();
 
-/* Get ADC sample. */
-uint16_t Adc_GetSample();
+/* Get ADC sample from the given channel. */
+uint16_t Adc_GetSample(uint8_t channel);
 
 #endif  // COMPONENTS_INTERNAL_ADC_ADC_H_

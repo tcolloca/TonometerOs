@@ -9,17 +9,17 @@
 #define LED_PIN  PB7
 
 void Led_Init() {
-	Gpio_InitPin('B', LED_PIN, true /* output */);
-	Logger_AtDebug("Initialized Internal Led at port B%d", LED_PIN);
+	Gpio_InitPin('B', LED_PIN, /* output = */ true);
+//	Logger_AtDebug("Initialized Internal Led at port B%d", LED_PIN);
 }
 
 void Led_TurnOff() {
 	// Internal Led power is opposite to pin value.
 	Gpio_SetPin('B', LED_PIN);
-	Logger_AtFinest("Internal Led off.");
+//	Logger_AtFinest("Internal Led off.");
 }
 
 void Led_TurnOn() {
 	Gpio_ClearPin('B', LED_PIN);
-	Logger_AtFinest("Internal Led on.");
+//	Logger_AtFinest("Internal Led on.");
 }

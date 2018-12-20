@@ -10,8 +10,8 @@
 #include "util/util.h"
 
 #define CLOCK_HZ         14745600
-#define PRESCALER        8
-#define RESOLUTION_FREQ  50000  // 50000 Hz = 1 / 50000 s = 0.00002 s = 0.02 ms
+#define PRESCALER        32
+#define RESOLUTION_FREQ  10000  // 50000 Hz = 1 / 50000 s = 0.00002 s = 0.02 ms
 
 static const int DELTA_USECS_ = 1000000 / RESOLUTION_FREQ;
 
@@ -37,9 +37,9 @@ void Timer0_Init() {
 
 	SET(TIMSK, OCIE0);  // Enable Timer/Counter0 Compare match interrupt.
 
-	Logger_AtDebug("Initialized Timer0 at CTC mode.");
-	Logger_AtDebug("Initialized Timer0 Prescaler: %d", PRESCALER);
-	Logger_AtDebug("Initialized Timer0 OCR0: %d", OCR0);
+//	Logger_AtDebug("Initialized Timer0 at CTC mode.");
+//	Logger_AtDebug("Initialized Timer0 Prescaler: %d", PRESCALER);
+//	Logger_AtDebug("Initialized Timer0 OCR0: %d", OCR0);
 }
 
 /* Timer/Counter0 Interrupt */
@@ -71,7 +71,7 @@ uint8_t Timer0_SetPrescaler() {
 		SET(prescaler, CS01);
 		SET(prescaler, CS02);
 	} else {
-		Logger_AtError("Timer0 prescaler not defined.");
+//		Logger_AtError("Timer0 prescaler not defined.");
 		return 0;
 	}
 	TCCR0 |= prescaler;

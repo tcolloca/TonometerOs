@@ -11,7 +11,7 @@ static char port_;
 static uint8_t pin_number_;
 
 void Valve_Init(char port, uint8_t pin_number) {
-	Gpio_InitPin(port, pin_number, true);
+	Gpio_InitPin(port, pin_number, /* output = */ true);
 	port_ = port;
 	pin_number_ = pin_number;
 	Logger_AtDebug("Initialized Valve at port %c%d", port_, pin_number_);

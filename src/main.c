@@ -3,9 +3,14 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "components/external/air_pump/air_pump.h"
+#include "components/external/bmp280/bmp280.h"
+#include "components/external/ir_receiver/ir_receiver.h"
 #include "components/external/ir_led/ir_led.h"
+#include "components/external/mpx_sensor/mpx_sensor.h"
+#include "components/external/valve/valve.h"
 #include "components/internal/adc/adc.h"
 #include "components/internal/led/led.h"
 #include "components/internal/timer0/timer0.h"
@@ -15,13 +20,42 @@
 #include "event/event.h"
 #include "lib/io.h"
 #include "logger/logger.h"
+#include "util/util.h"
+
+static volatile bool measure = false;
+static volatile bool measuring = false;
+
+static void Measure();
 
 static void Main_HandleInput(unsigned char data) {
 	if (data == '1') {
 		AirPump_TurnOn();
 	} else if (data == '2') {
 		AirPump_TurnOff();
+	} else if (data == '3') {
+//		measure = true;
+//		Measure();
+//		Logger_AtInfo("Eye pressure: UNKNOWN");
+		return;
 	}
+}
+
+static void Measure() {
+//	if (measuring) {
+//		return;
+//	}
+	measuring = true;
+//	bmp280_measure();
+//	uint32_t bmp_pressure = bmp280_getpressure();
+//	Logger_AtInfo("Tank pressure (hPa x 100): %lu", bmp_pressure);
+//	uint32_t bmp_temperature = bmp280_gettemperature();
+//	Logger_AtInfo("Tank temperature (°C x 100): %lu", bmp_temperature);
+	uint32_t mpx_sensor_pressure = MpxSensor_GetPressure();
+	Logger_AtInfo("Output pressure (mmHg x 100): %lu", mpx_sensor_pressure);
+	uint16_t ir_receiver_data = IrReceiver_GetSample();
+	Logger_AtInfo("IR Receiver: %d", ir_receiver_data);
+	measuring = false;
+	measure = false;
 }
 
 static void Main_UsbReadListener(void* a_void, Event* event) {
@@ -31,7 +65,7 @@ static void Main_UsbReadListener(void* a_void, Event* event) {
 
 static uint32_t BlinkLed(uint32_t lastSec) {
 	uint64_t currMillis = Timer0_GetStartTimeInMillis();
-	uint32_t currSec = currMillis  / 1000;
+	uint32_t currSec = currMillis / 1000;
 	if (currSec != lastSec) {
 		if (currSec % 2 == 0) {
 			Led_TurnOff();
@@ -44,28 +78,37 @@ static uint32_t BlinkLed(uint32_t lastSec) {
 }
 
 int main() {
-	Logger_SetLevel(LOGGER_LEVEL);
-
-	Usb_Init(); // First one to init to be able to debug.
-	Io_Init();
+//	Logger_SetLevel(LOGGER_LEVEL);
+//
+//	Usb_Init();  // First one to init to be able to debug.
+//	Io_Init();
 
 	Led_Init();
 	Timer0_Init();
-//	IrLed_Init();
-	Adc_Init();
-	AirPump_Init(AIR_PUMP_PORT, AIR_PUMP_PIN);
+//	Adc_Init();
 
-  // Global enable of interrupts.
+//	IrLed_Init(IR_LED_PORT, IR_LED_PIN);
+//	IrReceiver_Init(IR_RECEIVER_PORT, IR_RECEIVER_PIN);
+//	AirPump_Init(AIR_PUMP_PORT, AIR_PUMP_PIN);
+//	Valve_Init(VALVE_PORT, VALVE_PIN);
+//	MpxSensor_Init(MPX_SENSOR_PORT, MPX_SENSOR_PIN);
+
+//	bmp280_init();
+
+	// Global enable of interrupts.
 	sei();
 
-	Listener* usb_read_listener = Listener_New(NULL, &Main_UsbReadListener);
-	UsbRead_AddListener(NULL, usb_read_listener);
+//	Listener* usb_read_listener = Listener_New(NULL, &Main_UsbReadListener);
+//	UsbRead_AddListener(NULL, usb_read_listener);
 
 	uint32_t lastSec = 0;
 	while (true) {
 		lastSec = BlinkLed(lastSec);
+//		if (measure) {
+//			Measure();
+//		}
 	}
 
-	Listener_Destroy(usb_read_listener);
+//	Listener_Destroy(usb_read_listener);
 }
 
