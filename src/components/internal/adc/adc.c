@@ -48,14 +48,13 @@ static void Adc_SetChannel(uint8_t channel) {
 
 uint16_t Adc_GetSample(uint8_t channel) {
 	Logger_AtInfo("Getting sample from channel: %d ...", channel);
-
 	Adc_SetChannel(channel);
-	SET(ADCSRA, ADSC);  // Start conversion.
 
+	// Discard first sample
+	SET(ADCSRA, ADSC);  // Start conversion.
 	Adc_WaitForConversion();
 
 	SET(ADCSRA, ADSC);  // Start conversion.
-
 	Adc_WaitForConversion();
 
 	Logger_AtInfo("Got ADC Sample: %d", ADC);

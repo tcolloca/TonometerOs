@@ -23,6 +23,7 @@
 // User configuration - modify these to suit your project
 //
 #include "components/internal/i2c/i2c.h" // i2c Fleury lib
+#include "logger/logger.h"
 
 // TODO: there can be two BMP280 sensors on the I2C bus, ids 0x76, 0x77.
 // Currently we support only one sensor for the sake of simplicity
@@ -41,7 +42,7 @@
 
 // empty debugging function, if not provided above
 #ifndef BMP280_DEBUG
-#define BMP280_DEBUG(name, val)	do { /* Logger_AtError(name); PrintError(); */ } while (0)
+#define BMP280_DEBUG(name, val)	do { Logger_AtFiner(name, val); } while (0)
 #endif
 
 #define BMP280_ID_REG		0xD0

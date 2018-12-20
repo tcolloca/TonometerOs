@@ -28,28 +28,37 @@ static volatile bool measuring = false;
 static void Measure();
 
 static void Main_HandleInput(unsigned char data) {
-	if (data == '1') {
+	Logger_AtInfo("Handling input: %c", data);
+	switch (data) {
+	case '1':
 		AirPump_TurnOn();
-	} else if (data == '2') {
+		break;
+	case '2':
 		AirPump_TurnOff();
-	} else if (data == '3') {
-//		measure = true;
-//		Measure();
-//		Logger_AtInfo("Eye pressure: UNKNOWN");
-		return;
+		break;
+	case '3':
+		Valve_Open();
+		break;
+	case '4':
+		Valve_Close();
+		break;
+	case '9':
+		measure = true;
+		Measure();
+		Logger_AtInfo("Eye pressure: UNKNOWN");
+		break;
 	}
 }
 
 static void Measure() {
-//	if (measuring) {
-//		return;
-//	}
+	Logger_AtInfo("Measuring...");
+	if (measuring) {
+		return;
+	}
 	measuring = true;
-//	bmp280_measure();
-//	uint32_t bmp_pressure = bmp280_getpressure();
-//	Logger_AtInfo("Tank pressure (hPa x 100): %lu", bmp_pressure);
-//	uint32_t bmp_temperature = bmp280_gettemperature();
-//	Logger_AtInfo("Tank temperature (°C x 100): %lu", bmp_temperature);
+	bmp280_measure();
+	uint32_t bmp_pressure = bmp280_getpressure();
+	Logger_AtInfo("Tank pressure (hPa x 100): %lu", bmp_pressure);
 	uint32_t mpx_sensor_pressure = MpxSensor_GetPressure();
 	Logger_AtInfo("Output pressure (mmHg x 100): %lu", mpx_sensor_pressure);
 	uint16_t ir_receiver_data = IrReceiver_GetSample();
@@ -78,37 +87,39 @@ static uint32_t BlinkLed(uint32_t lastSec) {
 }
 
 int main() {
-//	Logger_SetLevel(LOGGER_LEVEL);
+	Logger_SetLevel(LOGGER_LEVEL);
 //
-//	Usb_Init();  // First one to init to be able to debug.
-//	Io_Init();
+	Usb_Init();  // First one to init to be able to debug.
+	Io_Init();
 
 	Led_Init();
 	Timer0_Init();
-//	Adc_Init();
+	Adc_Init();
 
-//	IrLed_Init(IR_LED_PORT, IR_LED_PIN);
-//	IrReceiver_Init(IR_RECEIVER_PORT, IR_RECEIVER_PIN);
-//	AirPump_Init(AIR_PUMP_PORT, AIR_PUMP_PIN);
-//	Valve_Init(VALVE_PORT, VALVE_PIN);
-//	MpxSensor_Init(MPX_SENSOR_PORT, MPX_SENSOR_PIN);
+	Logger_AtInfo("*** TonometerOs v3.1 ***");
 
-//	bmp280_init();
+	IrLed_Init(IR_LED_PORT, IR_LED_PIN);
+	IrReceiver_Init(IR_RECEIVER_PORT, IR_RECEIVER_PIN);
+	AirPump_Init(AIR_PUMP_PORT, AIR_PUMP_PIN);
+	Valve_Init(VALVE_PORT, VALVE_PIN);
+	MpxSensor_Init(MPX_SENSOR_PORT, MPX_SENSOR_PIN);
+
+	bmp280_init();
 
 	// Global enable of interrupts.
 	sei();
 
-//	Listener* usb_read_listener = Listener_New(NULL, &Main_UsbReadListener);
-//	UsbRead_AddListener(NULL, usb_read_listener);
+	Listener* usb_read_listener = Listener_New(NULL, &Main_UsbReadListener);
+	UsbRead_AddListener(NULL, usb_read_listener);
 
 	uint32_t lastSec = 0;
 	while (true) {
 		lastSec = BlinkLed(lastSec);
-//		if (measure) {
-//			Measure();
-//		}
+		if (measure) {
+			Measure();
+		}
 	}
 
-//	Listener_Destroy(usb_read_listener);
+	Listener_Destroy(usb_read_listener);
 }
 
