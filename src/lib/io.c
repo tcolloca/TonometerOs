@@ -6,7 +6,7 @@
 #include "components/internal/usb/event.h"
 #include "logger/logger.h"
 
-#define READ_BUFFER_SIZE 10
+#define READ_BUFFER_SIZE 5
 
 static char read_buffer_[READ_BUFFER_SIZE + 1];
 static int read_buffer_head_ = 0;
@@ -35,6 +35,7 @@ void Io_UsbReadListener(void* a_void, Event* event) {
 	unsigned char c = UsbReadEvent_GetData(usb_read_event);
 
 	read_buffer_[read_buffer_head_] = c;
+//	printf("Adding char to buffer: %c", c);
 
 	if (++read_buffer_head_ > READ_BUFFER_SIZE) {
 		read_buffer_head_ = 0;
@@ -58,6 +59,8 @@ static int Usb_GetChar(FILE *stream) {
 	while (read_buffer_count_ == 0)
 		; /* wait for a new char */
 	c = read_buffer_[read_buffer_tail_];
+
+//	printf("Pulling char from buffer: %c", c);
 
 	if (++read_buffer_tail_ > READ_BUFFER_SIZE) {
 		read_buffer_tail_ = 0;

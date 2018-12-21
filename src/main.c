@@ -25,6 +25,8 @@
 static volatile bool measure = false;
 static volatile bool measuring = false;
 
+static int freeRam();
+
 static void Measure();
 
 static void Main_HandleInput(unsigned char data) {
@@ -41,6 +43,9 @@ static void Main_HandleInput(unsigned char data) {
 		break;
 	case '4':
 		Valve_Close();
+		break;
+	case '5':
+		Logger_AtInfo("\n[memCheck] %d", freeRam());
 		break;
 	case '9':
 		measure = true;
@@ -59,10 +64,10 @@ static void Measure() {
 	bmp280_measure();
 	uint32_t bmp_pressure = bmp280_getpressure();
 	Logger_AtInfo("Tank pressure (hPa x 100): %lu", bmp_pressure);
-	uint32_t mpx_sensor_pressure = MpxSensor_GetPressure();
-	Logger_AtInfo("Output pressure (mmHg x 100): %lu", mpx_sensor_pressure);
-	uint16_t ir_receiver_data = IrReceiver_GetSample();
-	Logger_AtInfo("IR Receiver: %d", ir_receiver_data);
+//	uint16_t ir_receiver_data = IrReceiver_GetSample();
+//	Logger_AtInfo("IR Receiver: %d", ir_receiver_data);
+//	uint32_t mpx_sensor_pressure = MpxSensor_GetPressure();
+//	Logger_AtInfo("Output pressure (mmHg x 100): %lu", mpx_sensor_pressure);
 	measuring = false;
 	measure = false;
 }
@@ -86,6 +91,13 @@ static uint32_t BlinkLed(uint32_t lastSec) {
 	return lastSec;
 }
 
+static int freeRam() {
+	extern int __heap_start, *__brkval;
+	int v;
+	Logger_AtInfo("mem: %d, %d", __heap_start, __brkval);
+	return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
 int main() {
 	Logger_SetLevel(LOGGER_LEVEL);
 //
@@ -96,8 +108,7 @@ int main() {
 	Timer0_Init();
 	Adc_Init();
 
-	Logger_AtInfo("*** TonometerOs v3.1 ***");
-
+	Logger_AtInfo("Mem check:  %d", freeRam());
 	IrLed_Init(IR_LED_PORT, IR_LED_PIN);
 	IrReceiver_Init(IR_RECEIVER_PORT, IR_RECEIVER_PIN);
 	AirPump_Init(AIR_PUMP_PORT, AIR_PUMP_PIN);
@@ -109,6 +120,8 @@ int main() {
 	// Global enable of interrupts.
 	sei();
 
+
+	Logger_AtInfo("*** TonometerOs v3.1 ***");
 	Listener* usb_read_listener = Listener_New(NULL, &Main_UsbReadListener);
 	UsbRead_AddListener(NULL, usb_read_listener);
 

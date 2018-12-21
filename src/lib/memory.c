@@ -7,7 +7,7 @@
 
 #include "logger/logger.h"
 
-#define M_HEAP_SIZE      2048
+#define M_HEAP_SIZE      512
 #define MAX_OBJ          64
 #define M_POINTERS_SIZE  MAX_OBJ * 2
 
