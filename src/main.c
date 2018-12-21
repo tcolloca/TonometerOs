@@ -160,6 +160,7 @@ static void MeasureIncTankPressure() {
 	uint32_t bmp_pressure = bmp280_getpressure();
 	Logger_AtDebug("Tank pressure (hPa x 100): %lu", bmp_pressure);
 	if (bmp_pressure >= MAX_PRESSURE) {
+		Logger_AtInfo("Reached max pressure (hPa x 100): %lu", bmp_pressure);
 		Main_AirPump_TurnOff();
 	}
 }
@@ -170,6 +171,7 @@ static void MeasureDecTankPressure() {
 	Logger_AtDebug("Tank pressure (hPa x 100): %lu", bmp_pressure);
 	if (SEARCH_PRESSURE - DELTA_ERROR <= bmp_pressure &&
 			bmp_pressure < SEARCH_PRESSURE + DELTA_ERROR) {
+		Logger_AtInfo("Reached search pressure (hPa x 100): %lu", bmp_pressure);
 		Main_Valve_Open();
 	} else if (bmp_pressure < SEARCH_PRESSURE - DELTA_ERROR) {
 		Main_AirPump_TurnOn();
