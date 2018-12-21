@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 /* Function to echo value read from usb plus one. */
-static void Main_HandleInput(unsigned char data);
+void Main_HandleInput(unsigned char data);
 
 int main();
 

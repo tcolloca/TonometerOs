@@ -3,7 +3,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "components/internal/usb/event.h"
+#include "lib/io.h"
 #include "logger/logger.h"
 #include "util/util.h"
 
@@ -50,7 +50,5 @@ void Usb_Write(unsigned char data) {
 
 /* USART0 Receive Interrupt */
 SIGNAL (USART0_RX_vect) {
-	UsbReadEvent* event = UsbReadEvent_New(Usb_Read());
-	Dispatcher_Dispatch(USB_READ_EVENT_ID, event);
-	UsbReadEvent_Destroy(event);
+	Io_UsbReadListener(Usb_Read());
 }

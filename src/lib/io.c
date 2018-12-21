@@ -3,17 +3,14 @@
 #include <stdio.h>
 
 #include "components/internal/usb/usb.h"
-#include "components/internal/usb/event.h"
 #include "logger/logger.h"
+#include "main.h"
 
-#define READ_BUFFER_SIZE 5
+#define READ_BUFFER_SIZE 1
 
 static char read_buffer_[READ_BUFFER_SIZE + 1];
-static int read_buffer_head_ = 0;
 static int read_buffer_tail_ = 0;
 static int read_buffer_count_ = 0;
-
-static void Io_UsbReadListener(void* a_void, Event* event);
 
 static int Usb_PutChar(char c, FILE *stream);
 
@@ -23,28 +20,13 @@ static FILE usb_stdout = FDEV_SETUP_STREAM(Usb_PutChar, Usb_GetChar, _FDEV_SETUP
 
 void Io_Init() {
 	stdout = &usb_stdout;
-	Listener* usb_read_listener = Listener_New(NULL, &Io_UsbReadListener);
-	UsbRead_AddListener(NULL, usb_read_listener);
 
 	printf("\n\n\n"); // Add distance from garbage.
 	Logger_AtDebug("Initialized I/O via Uart (Usb).");
 }
 
-void Io_UsbReadListener(void* a_void, Event* event) {
-	UsbReadEvent* usb_read_event = (UsbReadEvent*) event;
-	unsigned char c = UsbReadEvent_GetData(usb_read_event);
-
-	read_buffer_[read_buffer_head_] = c;
-//	printf("Adding char to buffer: %c", c);
-
-	if (++read_buffer_head_ > READ_BUFFER_SIZE) {
-		read_buffer_head_ = 0;
-	}
-
-	if (++read_buffer_count_ > READ_BUFFER_SIZE) {
-		read_buffer_count_ = READ_BUFFER_SIZE;
-		Logger_AtError("Read buffer overflow.");
-	}
+void Io_UsbReadListener(unsigned char c) {
+	Main_HandleInput(c);
 }
 
 static int Usb_PutChar(char c, FILE *stream) {

@@ -21,4 +21,11 @@
 #define MPX_SENSOR_PORT   'F'
 #define MPX_SENSOR_PIN     2
 
+#define MEASUREMENTS_COUNT 500
+
+#define MAX_PRESSURE    125300
+#define SEARCH_PRESSURE 125000
+
+#define DELTA_ERROR     2
+
 #endif  // CONFIG_CONFIG_H_

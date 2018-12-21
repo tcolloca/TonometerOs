@@ -2,6 +2,7 @@
 
 #include <avr/io.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "logger/logger.h"
 #include "util/util.h"
@@ -43,21 +44,27 @@ static void Adc_SetChannel(uint8_t channel) {
 	SET_MASK(ADMUX, channel_);
 
 	Logger_AtFinest("\tChanged ADC channel: %d", channel_);
-	Logger_AtInfo("\tADMUX: %d", ADMUX);
+	Logger_AtDebug("\tADMUX: %d", ADMUX);
 }
 
 uint16_t Adc_GetSample(uint8_t channel) {
-	Logger_AtInfo("Getting sample from channel: %d ...", channel);
+	return Adc_GetSampleMaybeDisard(channel, true);
+}
+
+uint16_t Adc_GetSampleMaybeDisard(uint8_t channel, bool discard_first) {
+	Logger_AtDebug("Getting sample from channel: %d ...", channel);
 	Adc_SetChannel(channel);
 
+	if (discard_first) {
 	// Discard first sample
 	SET(ADCSRA, ADSC);  // Start conversion.
 	Adc_WaitForConversion();
+	}
 
 	SET(ADCSRA, ADSC);  // Start conversion.
 	Adc_WaitForConversion();
 
-	Logger_AtInfo("Got ADC Sample: %d", ADC);
+	Logger_AtDebug("Got ADC Sample: %d", ADC);
 
 	return ADC;
 }

@@ -28,27 +28,11 @@ uint32_t MpxSensor_GetPressure() {
 	uint16_t data = Adc_GetSample(pin_number_);
 	Logger_AtInfo("Got sample from Mpx Sensor: %d", data);
 
-	uint32_t millivolts = 5 * 1000 / 1023 * data;
+	float pressure_kpa = (data/(float)1023+0.00842)/ (float)0.002421;
 
-	Logger_AtInfo("mV: %lu", millivolts);
+	Logger_AtDebug("Pressure kPa x100: %d", (uint32_t) (pressure_kpa * 100));
 
-
-//	uint32_t m = (400000 - 20000) / (4800 - 200);
-
-//	Logger_AtInfo("m: %lu", m);
-
-
-//	uint32_t b = (20000) - m * 200;
-
-//	Logger_AtInfo("b: %lu", b);
-
-		uint32_t pressure_hpa = (millivolts * 1000 + (double) 42.1) * (double) 413.052457662 / 5 / 100;
-//  uint32_t pressure_hpa = m * millivolts + b;
-//	uint32_t pressure_hpa = (420000 - 0) * data / 1023 + 0;
-
-	Logger_AtInfo("MPX Pressure (hPa x 100): %lu", pressure_hpa);
-
-	uint64_t pressure_mmHg = (uint64_t) (0.7500616827 * (double) pressure_hpa);
+	uint64_t pressure_mmHg = (uint64_t) (7.500616827 * (double) pressure_kpa);
 
 	return pressure_mmHg;
 }
