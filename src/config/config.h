@@ -6,6 +6,13 @@
 
 #define LOGGER_LEVEL   DEBUG
 
+#define MEASUREMENTS_COUNT 100
+
+#define DELTA_ERROR    5
+
+#define SEARCH_PRESSURE 115000
+#define MAX_PRESSURE    (SEARCH_PRESSURE + 300)
+
 #define IR_LED_PORT       'A'
 #define IR_LED_PIN         4
 
@@ -21,18 +28,11 @@
 #define MPX_SENSOR_PORT   'F'
 #define MPX_SENSOR_PIN     2
 
-#define MEASUREMENTS_COUNT 100
-
-#define DELTA_ERROR    5
-
 #define AIR_DENSITY 1.293
+#define AIR_SPEED   121.65
 
 //#define MAX_PRESSURE    125300
 //#define SEARCH_PRESSURE 125000
 //#define AIR_SPEED   195.57
-
-#define SEARCH_PRESSURE 115000
-#define MAX_PRESSURE    (SEARCH_PRESSURE + 300)
-#define AIR_SPEED   121.65
 
 #endif  // CONFIG_CONFIG_H_
