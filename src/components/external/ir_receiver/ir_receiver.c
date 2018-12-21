@@ -33,20 +33,20 @@ uint16_t IrReceiver_GetSample() {
 	Logger_AtFiner("Getting sample from IR Receiver...");
 	uint16_t data1 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
 			false);
-	uint16_t data2 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
-			false);
-	uint16_t data3 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
-			false);
-	uint16_t data4 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
-			false);
-	uint16_t data5 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
-			false);
+//	uint16_t data2 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
+//			false);
+//	uint16_t data3 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
+//			false);
+//	uint16_t data4 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
+//			false);
+//	uint16_t data5 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
+//			false);
 
-	uint16_t data_med = IrReceiver_MedianOfFive(data1, data2, data3, data4,
-			data5);
+//	uint16_t data_med = IrReceiver_MedianOfFive(data1, data2, data3, data4,
+//			data5);
 
-	Logger_AtDebug("Got sample from IR Receiver: %d", data_med);
-	return data_med;
+//	Logger_AtFiner("Got sample from IR Receiver: %d", data_med);
+	return data1;
 }
 
 uint16_t IrReceiver_MedianOfFive(uint16_t n1, uint16_t n2, uint16_t n3,

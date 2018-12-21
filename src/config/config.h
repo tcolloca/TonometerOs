@@ -4,7 +4,7 @@
 #ifndef CONFIG_CONFIG_H_
 #define CONFIG_CONFIG_H_
 
-#define LOGGER_LEVEL   DEBUG
+#define LOGGER_LEVEL   INFO
 
 #define MEASUREMENTS_COUNT 100
 

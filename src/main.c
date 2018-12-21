@@ -147,7 +147,7 @@ static void MeasureEyePressure() {
 	}
 
 	uint16_t ir_receiver_data = IrReceiver_GetSample();
-	Logger_AtDebug("IR Receiver: %d", ir_receiver_data);
+	Logger_AtFiner("IR Receiver: %d", ir_receiver_data);
 
 	if (ir_receiver_data > ir_led_max) {
 		ir_led_max = ir_receiver_data;
@@ -214,7 +214,7 @@ int main() {
 		if (measure) {
 			Measure();
 		}
-		if (measure_eye_pressure && currMicros / 10 != lastMicros / 10) {
+		if (measure_eye_pressure && currMicros != lastMicros) {
 			MeasureEyePressure();
 		}
 		if (currMillis / 10 != lastMillis / 10) {

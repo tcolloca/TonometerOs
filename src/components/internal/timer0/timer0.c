@@ -10,8 +10,8 @@
 #include "util/util.h"
 
 #define CLOCK_HZ         14745600
-#define PRESCALER        1024
-#define RESOLUTION_FREQ  100  // 50000 Hz = 1 / 50000 s = 0.00002 s = 0.02 ms
+#define PRESCALER        32
+#define RESOLUTION_FREQ  10000  // 50000 Hz = 1 / 50000 s = 0.00002 s = 0.02 ms
 
 static const int DELTA_USECS_ = 1000000 / RESOLUTION_FREQ;
 
