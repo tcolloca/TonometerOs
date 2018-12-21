@@ -28,6 +28,7 @@ static volatile bool measure_dec_tank_pressure = false;
 
 static volatile uint16_t ir_led_max = 0;
 static volatile uint32_t match_mpx_pressure = 0;
+static uint32_t init_mpx_pressure = 0;
 
 static int measurements_count = 0;
 
@@ -42,7 +43,7 @@ static void Main_Valve_Open();
 static void Main_Valve_Close();
 
 void Main_HandleInput(unsigned char data) {
-	Logger_AtInfo("Handling input: %c", data);
+	Logger_AtDebug("Handling input: %c", data);
 	switch (data) {
 	case '1':
 		Main_AirPump_TurnOn();
@@ -65,17 +66,20 @@ void Main_HandleInput(unsigned char data) {
 }
 
 static void Main_AirPump_TurnOn() {
+	Logger_AtInfo("Loading tank...");
 	AirPump_TurnOn();
 	measure_inc_tank_pressure = true;
 }
 
 static void Main_AirPump_TurnOff() {
+	Logger_AtInfo("Waiting for fixed pressure...");
 	AirPump_TurnOff();
 	measure_inc_tank_pressure = false;
 	measure_dec_tank_pressure = true;
 }
 
 static void Main_Valve_Open() {
+	Logger_AtInfo("Air stream released.");
 	Valve_Open();
 	measure_dec_tank_pressure = false;
 	measure_eye_pressure = true;
@@ -117,22 +121,33 @@ static void MeasureEyePressure() {
 	if (measurements_count++ > MEASUREMENTS_COUNT) {
 		measure_eye_pressure = false;
 		measurements_count = 0;
-		Logger_AtInfo("Ir Max: %d", ir_led_max);
-		Logger_AtInfo("Mpx match pressure: %lu", match_mpx_pressure);
+		Logger_AtDebug("Ir Max: %d", ir_led_max);
+		match_mpx_pressure = match_mpx_pressure - init_mpx_pressure;
+		Logger_AtDebug("Mpx match pressure (mmHg): %lu", match_mpx_pressure);
 
-		double dynamic_pressure_pa = AIR_SPEED * (double) AIR_SPEED * AIR_DENSITY / 2;
-		double total_pressure_pa = dynamic_pressure_pa + match_mpx_pressure;
+//		double dynamic_pressure_pa = (double) AIR_SPEED * (double) AIR_SPEED
+//				* (double) AIR_DENSITY / 2.0;
+//		Logger_AtInfo("Dynamic Pressure (Pa): %lu", (uint64_t) dynamic_pressure_pa);
 
-		double eye_pressure = 0.007500616827 * total_pressure_pa - 760;
+		double total_pressure_pa = //(double) dynamic_pressure_pa
+				+ (double) match_mpx_pressure * (double) 133.322368422;
+		Logger_AtDebug("Total Pressure (Pa): %lu", (uint64_t) total_pressure_pa);
 
-		Logger_AtInfo("Eye Pressure: %lu", (uint64_t) eye_pressure);
+		double eye_pressure = 0.007500616827 * total_pressure_pa;
+
+		Logger_AtInfo("Eye Pressure (mmHg): %lu", (uint64_t) eye_pressure);
 		Valve_Close();
+		return;
 	}
 	uint32_t mpx_sensor_pressure = MpxSensor_GetPressure();
-	Logger_AtInfo("Output pressure (mmHg x 100): %lu", mpx_sensor_pressure);
+	Logger_AtDebug("Output pressure (mmHg): %lu", mpx_sensor_pressure);
+
+	if (measurements_count == 0) {
+		init_mpx_pressure = mpx_sensor_pressure;
+	}
 
 	uint16_t ir_receiver_data = IrReceiver_GetSample();
-	Logger_AtInfo("IR Receiver: %d", ir_receiver_data);
+	Logger_AtDebug("IR Receiver: %d", ir_receiver_data);
 
 	if (ir_receiver_data > ir_led_max) {
 		ir_led_max = ir_receiver_data;
@@ -143,7 +158,7 @@ static void MeasureEyePressure() {
 static void MeasureIncTankPressure() {
 	bmp280_measure();
 	uint32_t bmp_pressure = bmp280_getpressure();
-	Logger_AtInfo("Tank pressure (hPa x 100): %lu", bmp_pressure);
+	Logger_AtDebug("Tank pressure (hPa x 100): %lu", bmp_pressure);
 	if (bmp_pressure >= MAX_PRESSURE) {
 		Main_AirPump_TurnOff();
 	}
@@ -152,7 +167,7 @@ static void MeasureIncTankPressure() {
 static void MeasureDecTankPressure() {
 	bmp280_measure();
 	uint32_t bmp_pressure = bmp280_getpressure();
-	Logger_AtInfo("Tank pressure (hPa x 100): %lu", bmp_pressure);
+	Logger_AtDebug("Tank pressure (hPa x 100): %lu", bmp_pressure);
 	if (SEARCH_PRESSURE - DELTA_ERROR <= bmp_pressure &&
 			bmp_pressure < SEARCH_PRESSURE + DELTA_ERROR) {
 		Main_Valve_Open();
@@ -199,7 +214,7 @@ int main() {
 		if (measure) {
 			Measure();
 		}
-		if (measure_eye_pressure && currMicros / 100 != lastMicros / 100) {
+		if (measure_eye_pressure && currMicros / 10 != lastMicros / 10) {
 			MeasureEyePressure();
 		}
 		if (currMillis / 10 != lastMillis / 10) {

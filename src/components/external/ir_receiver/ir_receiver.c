@@ -30,7 +30,7 @@ void IrReceiver_Init(char port, uint8_t pin_number) {
 }
 
 uint16_t IrReceiver_GetSample() {
-	Logger_AtDebug("Getting sample from IR Receiver...");
+	Logger_AtFiner("Getting sample from IR Receiver...");
 	uint16_t data1 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
 			false);
 	uint16_t data2 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
@@ -41,11 +41,6 @@ uint16_t IrReceiver_GetSample() {
 			false);
 	uint16_t data5 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
 			false);
-	Logger_AtInfo("d1: %d", data1);
-	Logger_AtInfo("d2: %d", data2);
-	Logger_AtInfo("d3: %d", data3);
-	Logger_AtInfo("d4: %d", data4);
-	Logger_AtInfo("d5: %d", data5);
 
 	uint16_t data_med = IrReceiver_MedianOfFive(data1, data2, data3, data4,
 			data5);

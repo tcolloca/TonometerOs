@@ -44,7 +44,7 @@ static void Adc_SetChannel(uint8_t channel) {
 	SET_MASK(ADMUX, channel_);
 
 	Logger_AtFinest("\tChanged ADC channel: %d", channel_);
-	Logger_AtDebug("\tADMUX: %d", ADMUX);
+	Logger_AtFiner("\tADMUX: %d", ADMUX);
 }
 
 uint16_t Adc_GetSample(uint8_t channel) {
@@ -52,7 +52,7 @@ uint16_t Adc_GetSample(uint8_t channel) {
 }
 
 uint16_t Adc_GetSampleMaybeDisard(uint8_t channel, bool discard_first) {
-	Logger_AtDebug("Getting sample from channel: %d ...", channel);
+	Logger_AtFiner("Getting sample from channel: %d ...", channel);
 	Adc_SetChannel(channel);
 
 	if (discard_first) {
@@ -64,7 +64,7 @@ uint16_t Adc_GetSampleMaybeDisard(uint8_t channel, bool discard_first) {
 	SET(ADCSRA, ADSC);  // Start conversion.
 	Adc_WaitForConversion();
 
-	Logger_AtDebug("Got ADC Sample: %d", ADC);
+	Logger_AtFiner("Got ADC Sample: %d", ADC);
 
 	return ADC;
 }

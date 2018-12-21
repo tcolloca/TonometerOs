@@ -26,13 +26,15 @@ void MpxSensor_Init(char port, uint8_t pin_number) {
 uint32_t MpxSensor_GetPressure() {
 	Logger_AtDebug("Getting sample from Mpx Sensor...");
 	uint16_t data = Adc_GetSample(pin_number_);
-	Logger_AtInfo("Got sample from Mpx Sensor: %d", data);
+	Logger_AtDebug("Got sample from Mpx Sensor: %d", data);
 
 	float pressure_kpa = (data/(float)1023+0.00842)/ (float)0.002421;
 
 	Logger_AtDebug("Pressure kPa x100: %d", (uint32_t) (pressure_kpa * 100));
 
-	uint64_t pressure_mmHg = (uint64_t) (7.500616827 * (double) pressure_kpa);
+	uint64_t aux = (uint64_t) (7.500616827 * (double) pressure_kpa);
+
+	uint64_t pressure_mmHg = aux < 760 ? 0 : aux - 760;
 
 	return pressure_mmHg;
 }
