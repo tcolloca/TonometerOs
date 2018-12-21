@@ -28,4 +28,7 @@
 
 #define DELTA_ERROR     2
 
+#define AIR_DENSITY 1.293
+#define AIR_SPEED   195.57
+
 #endif  // CONFIG_CONFIG_H_

@@ -119,6 +119,13 @@ static void MeasureEyePressure() {
 		measurements_count = 0;
 		Logger_AtInfo("Ir Max: %d", ir_led_max);
 		Logger_AtInfo("Mpx match pressure: %lu", match_mpx_pressure);
+
+		double dynamic_pressure_pa = AIR_SPEED * (double) AIR_SPEED * AIR_DENSITY / 2;
+		double total_pressure_pa = dynamic_pressure_pa + match_mpx_pressure;
+
+		double eye_pressure = 0.007500616827 * total_pressure_pa - 760;
+
+		Logger_AtInfo("Eye Pressure: %lu", (uint64_t) eye_pressure);
 		Valve_Close();
 	}
 	uint32_t mpx_sensor_pressure = MpxSensor_GetPressure();
@@ -193,12 +200,12 @@ int main() {
 			Measure();
 		}
 		if (measure_eye_pressure && currMicros / 100 != lastMicros / 100) {
-//			MeasureEyePressure();
+			MeasureEyePressure();
 		}
 		if (currMillis / 10 != lastMillis / 10) {
-			if (measure_eye_pressure) {
-				MeasureEyePressure();
-			}
+//			if (measure_eye_pressure) {
+//				MeasureEyePressure();
+//			}
 			if (measure_inc_tank_pressure) {
 				MeasureIncTankPressure();
 			}

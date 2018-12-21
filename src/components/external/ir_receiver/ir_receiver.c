@@ -3,11 +3,14 @@
 #include <avr/io.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <util/delay.h>
 
 #include "components/internal/adc/adc.h"
 #include "components/internal/gpio/gpio.h"
 #include "logger/logger.h"
 #include "util/util.h"
+
+#define DELAY_US 1000
 
 static char port_;
 static uint8_t pin_number_;
@@ -38,6 +41,11 @@ uint16_t IrReceiver_GetSample() {
 			false);
 	uint16_t data5 = Adc_GetSampleMaybeDisard(pin_number_, /* discard_first = */
 			false);
+	Logger_AtInfo("d1: %d", data1);
+	Logger_AtInfo("d2: %d", data2);
+	Logger_AtInfo("d3: %d", data3);
+	Logger_AtInfo("d4: %d", data4);
+	Logger_AtInfo("d5: %d", data5);
 
 	uint16_t data_med = IrReceiver_MedianOfFive(data1, data2, data3, data4,
 			data5);
