@@ -100,7 +100,7 @@ static int freeRam() {
 
 int main() {
 	Logger_SetLevel(LOGGER_LEVEL);
-//
+
 	Usb_Init();  // First one to init to be able to debug.
 	Io_Init();
 
